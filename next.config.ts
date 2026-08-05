@@ -10,6 +10,19 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'ima.unice.com',
+        port: '',
+        pathname: '/ol/media/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'assets.aceternity.com',
+        port: '',
+        pathname: '/macbook.png',
+        search: '',
+      },
     ],
   },
 };

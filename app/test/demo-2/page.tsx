@@ -32,10 +32,30 @@ export default async function ProductPage() {
       },
     ],
     images: [
-      'https://ima.unice.com/ol/media/20260522/de518c235c1918711f5cc2aaf5ca7fcc.jpg?im=Resize,width=528,height=704',
-      'https://ima.unice.com/ol/media/20260726/a17d90b593e39134163343a9f73229cb.jpg?im=Resize,width=528,height=704',
-      'https://ima.unice.com/ol/media/20260522/f80ced30febb48680128bbb666edb433.gif?im=Resize,width=528,height=704',
-      'https://ima.unice.com/ol/media/20260724/02f1eda83ee0e575b580ee1fad315362.png?im=Resize,width=528,height=704',
+      {
+        src: 'https://ima.unice.com/ol/media/20260522/de518c235c1918711f5cc2aaf5ca7fcc.jpg?im=Resize,width=528,height=704',
+        alt: 'Body Wave Wig 正面造型',
+        width: 528,
+        height: 704,
+      },
+      {
+        src: 'https://ima.unice.com/ol/media/20260726/a17d90b593e39134163343a9f73229cb.jpg?im=Resize,width=528,height=704',
+        alt: 'Body Wave Wig 侧面造型',
+        width: 528,
+        height: 704,
+      },
+      {
+        src: 'https://ima.unice.com/ol/media/20260522/f80ced30febb48680128bbb666edb433.gif?im=Resize,width=528,height=704',
+        alt: 'Body Wave Wig 动态卷度展示',
+        width: 528,
+        height: 704,
+      },
+      {
+        src: 'https://ima.unice.com/ol/media/20260724/02f1eda83ee0e575b580ee1fad315362.png?im=Resize,width=528,height=704',
+        alt: 'Body Wave Wig 发际线细节',
+        width: 528,
+        height: 704,
+      },
     ],
     relatedProducts: [
       { id: '1', name: 'Body Wave Lace Wig', price: '$169', image: 'https://ima.unice.com/ol/media/20250123/bf9f153139a41fe5a8578939b269d554.png?im=Resize,width=528,height=704' },

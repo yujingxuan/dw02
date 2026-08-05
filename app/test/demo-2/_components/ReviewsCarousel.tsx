@@ -1,7 +1,8 @@
 'use client'
 
+import { useCarousel } from '@/hooks/useCarousel'
 import ClassNames from 'embla-carousel-class-names'
-import useEmblaCarousel from 'embla-carousel-react'
+import { useMemo } from 'react'
 import type { ProductReview } from '../types'
 
 type ReviewsCarouselProps = {
@@ -9,13 +10,17 @@ type ReviewsCarouselProps = {
 }
 
 export function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
-  const [viewportRef] = useEmblaCarousel(
-    {
+  const plugins = useMemo(
+    () => [ClassNames({ snapped: 'is-selected' })],
+    []
+  )
+  const [viewportRef] = useCarousel({
+    options: {
       align: 'center',
       loop: true,
     },
-    [ClassNames({ snapped: 'is-selected' })]
-  )
+    plugins,
+  })
 
   return (
     <section
@@ -29,28 +34,30 @@ export function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
         Demo 4: Customer reviews
       </h2>
 
-      <div ref={viewportRef} className="overflow-hidden py-2 touch-pan-y">
+      <div ref={viewportRef} className="touch-pan-y overflow-hidden py-2">
         <div className="-ml-3 flex">
           {reviews.map((review) => (
-            <article
+            <div
               key={review.id}
               className="min-w-0 flex-[0_0_82%] scale-90 pl-3 opacity-40 transition-all duration-300 [&.is-selected]:scale-100 [&.is-selected]:opacity-100"
             >
-              <div className="flex h-36 flex-col justify-between rounded-2xl bg-zinc-900 p-4 text-white shadow-lg">
-                <p className="line-clamp-3 text-xs italic text-zinc-300">
-                  “{review.comment}”
-                </p>
-                <div className="mt-2 flex items-center justify-between border-t border-zinc-800 pt-2 text-xs font-medium">
-                  <span className="text-zinc-400">{review.author}</span>
-                  <span
-                    aria-label={`${review.rating} 星评价`}
-                    className="text-yellow-400"
-                  >
-                    {'★'.repeat(review.rating)}
-                  </span>
+              <article>
+                <div className="flex h-36 flex-col justify-between rounded-2xl bg-zinc-900 p-4 text-white shadow-lg">
+                  <p className="line-clamp-3 text-xs italic text-zinc-300">
+                    “{review.comment}”
+                  </p>
+                  <div className="mt-2 flex items-center justify-between border-t border-zinc-800 pt-2 text-xs font-medium">
+                    <span className="text-zinc-400">{review.author}</span>
+                    <span
+                      aria-label={`${review.rating} 星评价`}
+                      className="text-yellow-400"
+                    >
+                      {'★'.repeat(review.rating)}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </article>
+              </article>
+            </div>
           ))}
         </div>
       </div>

@@ -1,10 +1,9 @@
 'use client'
 
-import { useCallback, useEffect, useId, useState } from 'react'
+import { useCarousel } from '@/hooks/useCarousel'
+import { useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import Autoplay from 'embla-carousel-autoplay'
-import useEmblaCarousel from 'embla-carousel-react'
-import Ssr from 'embla-carousel-ssr'
 import type { BannerSlide } from '../types'
 
 type BannerCarouselProps = {
@@ -12,40 +11,22 @@ type BannerCarouselProps = {
 }
 
 export function BannerCarousel({ slides }: BannerCarouselProps) {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const carouselId = useId()
-
-  const [viewportRef, carouselApi, serverApi] = useEmblaCarousel(
-    {
+  const plugins = useMemo(
+    () => [Autoplay({ delay: 5000, defaultInteraction: false })],
+    [slides]
+  )
+  const [viewportRef, api, selectedIndex, scrollTo] = useCarousel({
+    options: {
       align: 'start',
       loop: true,
     },
-    [
-      Ssr({ slideSizes: slides.map(() => 100) }),
-      Autoplay({ delay: 5000, defaultInteraction: false }),
-    ]
-  )
-
-  const syncActiveIndex = useCallback(() => {
-    if (carouselApi) setActiveIndex(carouselApi.selectedSnap())
-  }, [carouselApi])
+    plugins,
+  })
 
   useEffect(() => {
-    if (!carouselApi) return
+    if (!api) return
 
-    carouselApi.on('select', syncActiveIndex)
-    carouselApi.on('reinit', syncActiveIndex)
-
-    return () => {
-      carouselApi.off('select', syncActiveIndex)
-      carouselApi.off('reinit', syncActiveIndex)
-    }
-  }, [carouselApi, syncActiveIndex])
-
-  useEffect(() => {
-    if (!carouselApi) return
-
-    const autoplay = carouselApi.plugins().autoplay
+    const autoplay = api.plugins().autoplay
     if (!autoplay) return
 
     autoplay.play()
@@ -53,11 +34,11 @@ export function BannerCarousel({ slides }: BannerCarouselProps) {
     return () => {
       autoplay.stop()
     }
-  }, [carouselApi])
+  }, [api])
 
   function selectSlide(index: number) {
-    carouselApi?.goTo(index)
-    carouselApi?.plugins().autoplay?.reset()
+    scrollTo(index)
+    api?.plugins().autoplay?.reset()
   }
 
   return (
@@ -73,24 +54,22 @@ export function BannerCarousel({ slides }: BannerCarouselProps) {
         Demo 1: Mobile storefront banner
       </h2>
 
-      {!carouselApi && (
-        <style>{serverApi.plugins().ssr?.getStyles(`#${carouselId}`)}</style>
-      )}
-
       <div
         ref={viewportRef}
-        className="overflow-hidden rounded-2xl bg-zinc-950 touch-pan-y"
+        className="touch-pan-y overflow-hidden rounded-2xl bg-zinc-950"
       >
-        <div id={carouselId} className="flex">
+        <div className="flex">
           {slides.map((slide, index) => (
-            <article
+            <div
               key={slide.id}
               aria-label={`${index + 1} / ${slides.length}`}
               aria-roledescription="slide"
-              className="relative min-h-105 min-w-0 flex-[0_0_100%] overflow-hidden sm:min-h-95"
+              className="min-w-0 flex-[0_0_100%]"
             >
-              <BannerMedia slide={slide} />
-            </article>
+              <article className="relative min-h-105 overflow-hidden sm:min-h-95">
+                <BannerMedia slide={slide} />
+              </article>
+            </div>
           ))}
         </div>
       </div>
@@ -100,7 +79,7 @@ export function BannerCarousel({ slides }: BannerCarouselProps) {
         className="flex items-center justify-center gap-1"
       >
         {slides.map((slide, index) => {
-          const isActive = index === activeIndex
+          const isActive = index === selectedIndex
 
           return (
             <button

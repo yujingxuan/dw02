@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const demoPages = Array.from({ length: 5 }, (_, index) => ({
+const demoPages = Array.from({ length: 6 }, (_, index) => ({
   href: `/test/demo-${index + 1}`,
   label: `Demo ${index + 1}`,
 }));
